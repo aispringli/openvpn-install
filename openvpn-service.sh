@@ -24,6 +24,9 @@ append_param() {
                 *_*_*)   v=${v%%_*}-${v#*_}; v=${v%%_*}-${v#*_} ;;
                 *_*)     v=${v%%_*}-${v#*_} ;;
         esac
+        if [ "$v" = "secret" ]; then
+          v="tls-crypt"
+        fi
         echo -n "$v" >> "/var/etc/openvpn-$s.conf"
         return 0
 }
@@ -48,6 +51,10 @@ append_params() {
                 done                
                 unset IFS
         done
+        echo "cipher AES-128-GCM" >> "/var/etc/openvpn-$s.conf"
+        echo "tls-client" >> "/var/etc/openvpn-$s.conf"
+        echo "tls-version-min 1.2" >> "/var/etc/openvpn-$s.conf"
+        echo "tls-cipher TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256" >> "/var/etc/openvpn-$s.conf"
 }
 
 append_list() {
